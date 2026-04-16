@@ -1,0 +1,23 @@
+{
+  "name": "va-appointment-retrieval",
+  "version": "1.0.0",
+  "description": "Tool for retrieving patient appointment data from VA Clinical Encounter Service FHIR API",
+  "type": "module",
+  "main": "getAppointments.js",
+  "scripts": {
+    "start": "node getAppointments.js",
+    "batch": "node batchGetAppointments.js"
+  },
+  "keywords": [
+    "va",
+    "fhir",
+    "appointments",
+    "healthcare"
+  ],
+  "author": "VA Development Team",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": true
+}
