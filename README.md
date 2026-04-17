@@ -219,8 +219,8 @@ node batchGetAppointments.js
 
 - **Development**: shane.elliott@va.gov
 - **ICN Checksum Implementation**: andy.mccarty@va.gov, shane.elliott@va.gov
+- **Token Server (OCTO STS Token Generator)**: andy.mccarty@va.gov (https://va.ghe.com/software/octo-sts-token-generator)
 - **Code Generation Assistance**: GitHub Copilot (Claude Sonnet 4.5)
-- **Token Server**: OCTO STS Token Generator (https://va.ghe.com/software/octo-sts-token-generator)
 
 ## License
 
