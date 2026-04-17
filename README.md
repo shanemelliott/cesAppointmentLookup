@@ -17,6 +17,15 @@ A Node.js tool for retrieving patient appointment data from the VA Clinical Enco
 - Access to VA token server (running on localhost:3000)
 - Valid VA credentials configured in token server
 
+## Token Server Setup
+
+This tool requires the OCTO STS Token Generator to authenticate with the VA API.
+
+1. Get the token server from: https://va.ghe.com/software/octo-sts-token-generator
+2. Follow the token server setup instructions to configure your VA credentials
+3. Start the token server (default: http://localhost:3000)
+4. Verify the token server is running before using this tool
+
 ## Installation
 
 1. Clone this repository
@@ -36,6 +45,7 @@ A Node.js tool for retrieving patient appointment data from the VA Clinical Enco
 
 Edit `config.js` to configure:
 
+- **stringTable**: ICN checksum lookup table (required - see config.sample.js for instructions)
 - **patients**: Array of patient objects with ICN and site information
 - **tokenServer.url**: URL of your token server (default: http://localhost:3000)
 - **api.baseUrl**: Base URL for the CES API
@@ -45,6 +55,11 @@ Edit `config.js` to configure:
 
 Example configuration:
 ```javascript
+// Get stringTable from: https://vivian.worldvista.org/dox/Routine_MPIFSPC_source.html
+export const stringTable = [
+  // 6 rows of data from MPIFSPC routine
+];
+
 export const patients = [
   { icn: '1234567890', site: '556 (Lovell)' },
   { icn: '1234567891', site: '757 (Columbus)' }
@@ -103,7 +118,12 @@ The tool supports ICNs with or without checksums:
 - **With checksum**: `1234567890V12345`
 - **Without checksum**: `1234567890` (checksum will be calculated automatically)
 
-The checksum is calculated using the VA's algorithm based on a lookup table.
+The checksum is calculated using the VA's algorithm based on a lookup table (stringTable).
+
+**Credits**:
+- ICN checksum implementation: andy.mccarty@va.gov, shane.elliott@va.gov
+- Repository: https://github.ec.va.gov/shane-elliott/icnchecksum
+- StringTable source: https://vivian.worldvista.org/dox/Routine_MPIFSPC_source.html
 
 ## Token Management
 
@@ -146,6 +166,8 @@ Errors are logged to the console with descriptive messages.
 .
 ├── getAppointments.js          # Interactive single patient lookup
 ├── batchGetAppointments.js     # Batch processing script
+├── icnChecksum.js              # ICN checksum calculation library
+├── appointmentsLib.js          # Shared appointments API library
 ├── config.js                   # Configuration (gitignored)
 ├── config.sample.js            # Sample configuration
 ├── package.json                # Node.js dependencies
@@ -158,6 +180,8 @@ Errors are logged to the console with descriptive messages.
 ### "Error fetching token"
 - Ensure the token server is running on the configured port
 - Verify network connectivity to localhost:3000
+- Check that the token server is properly configured with your VA credentials
+- See Token Server Setup section for installation instructions
 
 ### "API returned 400"
 - Check that the ICN format is correct
@@ -183,10 +207,13 @@ node batchGetAppointments.js
 
 ### Code Structure
 
-- **ICN Checksum**: Implements VA's checksum algorithm using lookup tables
-- **Token Management**: JWT parsing and expiration checking
-- **API Client**: HTTPS requests with proper headers
-- **CSV Export**: Proper escaping and formatting for Excel compatibility
+- **icnChecksum.js**: Implements VA's checksum algorithm using lookup tables
+- **appointmentsLib.js**: Shared library for API calls and data formatting
+  - Token management (JWT parsing and expiration checking)
+  - HTTPS API client with proper headers
+  - Appointment formatting for display and CSV export
+- **getAppointments.js**: Interactive CLI for single patient lookup
+- **batchGetAppointments.js**: Batch processor with CSV export
 
 ## License
 
