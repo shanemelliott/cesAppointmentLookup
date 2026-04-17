@@ -12,6 +12,44 @@ import http from 'http';
 import { tokenServer, api } from './config.js';
 
 /**
+ * Helper function to determine participant type
+ * Handles both Vista format (actor.type) and Oracle Health format (type array + reference)
+ */
+function getParticipantType(participant) {
+  // Vista format: actor.type directly
+  if (participant.actor?.type) {
+    return participant.actor.type;
+  }
+  
+  // Oracle Health format: check type array coding
+  if (participant.type && Array.isArray(participant.type)) {
+    for (const typeObj of participant.type) {
+      if (typeObj.coding && Array.isArray(typeObj.coding)) {
+        for (const coding of typeObj.coding) {
+          if (coding.display === 'Patient') return 'Patient';
+          if (coding.display === 'Resource' && participant.actor?.reference?.startsWith('Practitioner/')) {
+            return 'Practitioner';
+          }
+        }
+      }
+      // Also check text field
+      if (typeObj.text === 'Patient') return 'Patient';
+    }
+  }
+  
+  // Fallback: check actor.reference
+  if (participant.actor?.reference) {
+    const ref = participant.actor.reference;
+    if (ref.startsWith('Patient/')) return 'Patient';
+    if (ref.startsWith('Practitioner/')) return 'Practitioner';
+    if (ref.startsWith('Location/')) return 'Location';
+    if (ref.startsWith('HealthcareService/')) return 'HealthcareService';
+  }
+  
+  return null;
+}
+
+/**
  * Parse a JWT token and return its payload
  * @param {string} token - JWT token
  * @returns {object|null} Parsed JWT payload or null if invalid
@@ -170,7 +208,7 @@ export function formatAppointment(appointment) {
   let patientInfo = 'N/A';
   if (appointment.participant) {
     const patientParticipant = appointment.participant.find(p => 
-      p.actor?.type === 'Patient'
+      getParticipantType(p) === 'Patient'
     );
     if (patientParticipant) {
       patientInfo = patientParticipant.actor.display || patientParticipant.actor.identifier?.value || 'N/A';
@@ -181,7 +219,7 @@ export function formatAppointment(appointment) {
   let clinic = 'N/A';
   if (appointment.participant) {
     const clinicParticipant = appointment.participant.find(p => 
-      p.actor?.type === 'HealthcareService'
+      getParticipantType(p) === 'HealthcareService'
     );
     if (clinicParticipant) {
       clinic = clinicParticipant.actor.display || clinicParticipant.actor.identifier?.value || 'N/A';
@@ -192,7 +230,7 @@ export function formatAppointment(appointment) {
   let provider = 'N/A';
   if (appointment.participant) {
     const providerParticipant = appointment.participant.find(p => 
-      p.actor?.type === 'Practitioner'
+      getParticipantType(p) === 'Practitioner'
     );
     if (providerParticipant) {
       provider = providerParticipant.actor.display || providerParticipant.actor.identifier?.value || 'N/A';
@@ -203,7 +241,7 @@ export function formatAppointment(appointment) {
   let location = 'N/A';
   if (appointment.participant) {
     const locationParticipant = appointment.participant.find(p => 
-      p.actor?.type === 'Location'
+      getParticipantType(p) === 'Location'
     );
     if (locationParticipant) {
       location = locationParticipant.actor.display || locationParticipant.actor.identifier?.value || 'N/A';
@@ -241,22 +279,22 @@ export function formatAppointmentForCSV(appointment, icn, site) {
   let provider = '';
   
   if (appointment.participant) {
-    const patientParticipant = appointment.participant.find(p => p.actor?.type === 'Patient');
+    const patientParticipant = appointment.participant.find(p => getParticipantType(p) === 'Patient');
     if (patientParticipant) {
       patientInfo = patientParticipant.actor.display || '';
     }
     
-    const clinicParticipant = appointment.participant.find(p => p.actor?.type === 'HealthcareService');
+    const clinicParticipant = appointment.participant.find(p => getParticipantType(p) === 'HealthcareService');
     if (clinicParticipant) {
       clinic = clinicParticipant.actor.display || '';
     }
     
-    const locationParticipant = appointment.participant.find(p => p.actor?.type === 'Location');
+    const locationParticipant = appointment.participant.find(p => getParticipantType(p) === 'Location');
     if (locationParticipant) {
       location = locationParticipant.actor.display || locationParticipant.actor.identifier?.value || '';
     }
     
-    const providerParticipant = appointment.participant.find(p => p.actor?.type === 'Practitioner');
+    const providerParticipant = appointment.participant.find(p => getParticipantType(p) === 'Practitioner');
     if (providerParticipant) {
       provider = providerParticipant.actor.display || '';
     }

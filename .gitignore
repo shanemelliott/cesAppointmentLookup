@@ -12,6 +12,10 @@ swagger.json
 *.csv
 appointments.csv
 
+# Test files
+test-*.json
+testAppointment.js
+
 # Logs
 *.log
 npm-debug.log*
