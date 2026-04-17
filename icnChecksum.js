@@ -6,6 +6,7 @@
  * - shane.elliott@va.gov
  * 
  * Repository: https://github.ec.va.gov/shane-elliott/icnchecksum
+ * Developed with assistance from GitHub Copilot (Claude Sonnet 4.5)
  * 
  * This module provides utilities for calculating and validating VA ICN checksums.
  */

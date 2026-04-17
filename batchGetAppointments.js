@@ -1,3 +1,11 @@
+/**
+ * VA Appointment Retrieval Tool - Batch Processing
+ * 
+ * Author: shane.elliott@va.gov
+ * Developed with assistance from GitHub Copilot (Claude Sonnet 4.5)
+ * Date: April 2026
+ */
+
 import fs from 'fs';
 import { patients, api } from './config.js';
 import { ensureICNChecksum } from './icnChecksum.js';

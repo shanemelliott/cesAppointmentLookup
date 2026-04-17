@@ -1,6 +1,9 @@
 /**
  * VA Appointments Library
  * 
+ * Author: shane.elliott@va.gov
+ * Developed with assistance from GitHub Copilot (Claude Sonnet 4.5)
+ * 
  * Shared utilities for fetching and formatting VA appointments via FHIR API
  */
 

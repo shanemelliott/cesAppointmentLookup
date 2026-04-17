@@ -1,3 +1,11 @@
+/**
+ * VA Appointment Retrieval Tool - Interactive Single Patient Lookup
+ * 
+ * Author: shane.elliott@va.gov
+ * Developed with assistance from GitHub Copilot (Claude Sonnet 4.5)
+ * Date: April 2026
+ */
+
 import readline from 'readline';
 import { ensureICNChecksum } from './icnChecksum.js';
 import { getToken, getAppointments, formatAppointment } from './appointmentsLib.js';

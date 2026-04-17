@@ -215,6 +215,13 @@ node batchGetAppointments.js
 - **getAppointments.js**: Interactive CLI for single patient lookup
 - **batchGetAppointments.js**: Batch processor with CSV export
 
+## Credits
+
+- **Development**: shane.elliott@va.gov
+- **ICN Checksum Implementation**: andy.mccarty@va.gov, shane.elliott@va.gov
+- **Code Generation Assistance**: GitHub Copilot (Claude Sonnet 4.5)
+- **Token Server**: OCTO STS Token Generator (https://va.ghe.com/software/octo-sts-token-generator)
+
 ## License
 
 Internal VA use only. Not for public distribution.
