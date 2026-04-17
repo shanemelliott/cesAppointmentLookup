@@ -139,6 +139,8 @@ The tool queries the VA Clinical Encounter Service FHIR API:
 
 **Endpoint**: `https://staff.apps.va.gov/ces/v1/Appointment`
 
+**Documentation**: https://shiny-bassoon-lm5lo53.pages.github.io/StructureDefinition-ces-appointment.html
+
 **Query Parameters**:
 - `patient:Patient.identifier`: Patient ICN with OID prefix
 - `date`: Date range filters (using FHIR search parameters)
